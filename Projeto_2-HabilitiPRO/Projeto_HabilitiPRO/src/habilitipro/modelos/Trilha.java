@@ -1,5 +1,6 @@
 package habilitipro.modelos;
 
+import javax.swing.*;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -84,18 +85,22 @@ public class Trilha {
     public void setNivelSatisfacao() {
         final String NIVEL_SATISFACAO_TEMPLATE = "^[1-5]";
         String nivelSatisfacao = "";
-        if(modulos.stream().toList().get(modulos.size()-1)
+        if(modulos.size()>0&&modulos.stream().toList().get(modulos.size()-1)
                 .getPrazoLimite().compareTo(LocalDate.now())>0) {
             nivelSatisfacao = validaString("Qual o nível de satisfação da trilha?",
                     NIVEL_SATISFACAO_TEMPLATE,
                     "O nível de satisfação deve ser inserido com um valor entre 1 e 5");
+        }else{
+            JOptionPane.showMessageDialog(null,"Trilha não disponível para avaliação");
         }
     }
 
     public void setAnotacoes() {
-        if(modulos.stream().toList().get(modulos.size()-1)
+        if(modulos.size()>0&&modulos.stream().toList().get(modulos.size()-1)
                 .getPrazoLimite().compareTo(LocalDate.now())>0) {
             this.anotacoes = validaString("Anotação Geral sobre a Trilha "+getNome());
+        }else{
+            JOptionPane.showMessageDialog(null,"Trilha não disponível para avaliação");
         }
     }
 
