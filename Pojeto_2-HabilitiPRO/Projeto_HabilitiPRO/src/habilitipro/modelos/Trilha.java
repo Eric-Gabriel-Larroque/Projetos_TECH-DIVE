@@ -1,11 +1,11 @@
-package habilitipro.classes;
+package habilitipro.modelos;
 
 import java.time.LocalDate;
 import java.util.*;
 
-import static habilitipro.classes.Empresa.*;
+import static habilitipro.modelos.Empresa.*;
 import static habilitipro.util.Validacao.*;
-import static habilitipro.classes.Modulo.*;
+import static habilitipro.modelos.Modulo.*;
 public class Trilha {
 
     private Empresa empresa;
@@ -80,12 +80,23 @@ public class Trilha {
         return this.modulos;
     }
 
+
     public void setNivelSatisfacao() {
+        final String NIVEL_SATISFACAO_TEMPLATE = "^[1-5]";
         String nivelSatisfacao = "";
         if(modulos.stream().toList().get(modulos.size()-1)
                 .getPrazoLimite().compareTo(LocalDate.now())>0) {
-            nivelSatisfacao = validaString("Qual o nível de satisfação da trilha?","[1-5]",
+            nivelSatisfacao = validaString("Qual o nível de satisfação da trilha?",
+                    NIVEL_SATISFACAO_TEMPLATE,
                     "O nível de satisfação deve ser inserido com um valor entre 1 e 5");
         }
     }
+
+    public void setAnotacoes() {
+        if(modulos.stream().toList().get(modulos.size()-1)
+                .getPrazoLimite().compareTo(LocalDate.now())>0) {
+            this.anotacoes = validaString("Anotação Geral sobre a Trilha "+getNome());
+        }
+    }
+
 }

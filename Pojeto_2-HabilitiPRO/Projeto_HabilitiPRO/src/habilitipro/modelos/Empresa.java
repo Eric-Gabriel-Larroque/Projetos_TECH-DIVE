@@ -1,16 +1,17 @@
-package habilitipro.classes;
+package habilitipro.modelos;
 
 import habilitipro.enums.Regionais;
 import habilitipro.enums.Segmento;
+import habilitipro.misc.CNPJ;
 
 import java.util.*;
 
 import static habilitipro.util.Validacao.*;
-import static habilitipro.classes.Trilha.*;
+import static habilitipro.modelos.Trilha.*;
 
 public class Empresa {
     private String nome;
-    private String CNPJ;
+    private CNPJ CNPJ;
     private String filial;
     private Segmento segmento;
     private String estado;
@@ -21,7 +22,7 @@ public class Empresa {
 
     public Empresa() {
         this.setNome();
-        this.setCNPJ();
+        this.CNPJ = new CNPJ();
         this.setMatrizFilial();
         this.setSegmento();
         this.setEstado();
@@ -38,11 +39,7 @@ public class Empresa {
     public String getNome() {
         return this.nome;
     }
-    private void setCNPJ() {
-        final String CNPJ_TEMPLATE = "\\d\\d.\\d\\d\\d.\\d\\d\\d/\\d\\d\\d\\d-\\d\\d";
-        this.CNPJ = validaString("Insira o CNPJ (formato XX.XXX.XXX/XXXX-XX)", CNPJ_TEMPLATE,
-                "Formato do CNPJ inválido. Insira corretamente:\n(XX.XXX.XXX/XXXX-XX)");
-    }
+
     private void setMatrizFilial() {
         this.filial =
                 escolherOpcoes("Sua empresa é:","Matriz","Filial")==0?
