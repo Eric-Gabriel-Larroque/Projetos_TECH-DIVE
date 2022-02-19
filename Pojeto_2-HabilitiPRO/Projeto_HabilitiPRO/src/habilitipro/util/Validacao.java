@@ -6,7 +6,8 @@ import java.util.*;
 public class Validacao {
 
     private static Collection c;
-
+    private static List<String> listaCPF = new ArrayList<>();
+    private static List<String> listaCNPJ = new ArrayList<>();
     public static String validaString(String mensagem) {
         String entrada = "";
         boolean repetir = true;
@@ -62,15 +63,19 @@ public class Validacao {
     }
 
     public static int validaNumero(String mensagem) {
-        final String NUMERO_TEMPLATE = "^[0-9]+";
+        final String NUMERO_TEMPLATE = "^[1-9]+";
         String entrada;
         do{
             entrada = validaString(mensagem);
 
             if(!entrada.matches(NUMERO_TEMPLATE)) {
                 JOptionPane.showMessageDialog(null,
-                        "Somente números são permitidos",
+                        "Somente números inteiros e positivos são permitidos.",
                         "Dados inválidos",JOptionPane.ERROR_MESSAGE);
+            }else if(entrada.equals("0")){
+                JOptionPane.showMessageDialog(null,
+                        "O número não pode ser igual a zero.",
+                        "Número igual a zero",JOptionPane.ERROR_MESSAGE);
             }
         }while(entrada==null||!entrada.matches(NUMERO_TEMPLATE));
         return Integer.parseInt(entrada);
