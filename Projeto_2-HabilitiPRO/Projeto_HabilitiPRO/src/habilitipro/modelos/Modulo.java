@@ -1,7 +1,9 @@
 package habilitipro.modelos;
 
 import javax.swing.*;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.LinkedHashSet;
@@ -67,10 +69,9 @@ public class Modulo {
     //DATA INICIAL DO CURSO DEFINIDA COMO O DIA SEGUINTE
     //PARA FINS DE VALIDAÇÃO DE STATUS
     private void setDataInicio() {
-
         this.dataInicio = LocalDate.now().plusDays(1);
-        if(LocalDate.now().equals(dataInicio)){
-        }
+        JOptionPane.showMessageDialog(null,
+                "Data inicial definida para o dia "+formatar(this.dataInicio));
     }
 
     //DATA FINAL DO CURSO DEFINIDA COMO O DIA APÓS A DATA INICIAL
@@ -88,9 +89,16 @@ public class Modulo {
         String[] opcoes = {"Sim","Não"};
         int resposta = escolherOpcoes("Deseja manter o prazo limite padrão (10 dias úteis)?",opcoes);
         if(resposta==0) {
-            this.prazoLimite = dataFim.plusDays(14) ;
+            this.prazoLimite = dataFim.plusDays(14);
         }else {
-            int diasUteis = validaNumero("Insira a quantidade de dias para a finalização do módulo");
+            int diasUteis = validaNumero(
+                    "Insira a quantidade de dias úteis para a finalização da fase de avaliação"
+            );
+            if(dataFim.plusDays(diasUteis).equals(dataFim.with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY)))){
+                diasUteis+= diasUteis<7?diasUteis+2:diasUteis+(diasUteis/7*2);
+            }else if(dataFim.plusDays(diasUteis).equals(dataFim.with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY)))){
+                diasUteis+= diasUteis<7?diasUteis+1:diasUteis+(diasUteis/7);
+            }
             this.prazoLimite = dataFim.plusDays(diasUteis);
         }
 
@@ -103,7 +111,7 @@ public class Modulo {
         listaStatus.put(LocalDate.now().compareTo(this.dataInicio)<=0,
                 "Curso não iniciado");
         listaStatus.put(LocalDate.now().compareTo(this.dataInicio)>=0&&
-                LocalDate.now().compareTo(this.dataFim)<0,"Curso em andamento");
+                LocalDate.now().compareTo(this.dataFim)<=0,"Curso em andamento");
         listaStatus.put(LocalDate.now().compareTo(this.dataFim)>0&&
                 LocalDate.now().compareTo(this.prazoLimite)<=0,"Em fase de avaliação");
         listaStatus.put(LocalDate.now().compareTo(this.prazoLimite)>0,"Fase de avaliação finalizada");
@@ -126,5 +134,13 @@ public class Modulo {
 
     public LocalDate getPrazoLimite() {
         return this.prazoLimite;
+    }
+
+    public LocalDate getDataInicio(){ return this.dataInicio;}
+
+    public LocalDate getDataFim(){ return this.dataFim;}
+
+    public String getStatus() {
+        return this.status;
     }
 }
