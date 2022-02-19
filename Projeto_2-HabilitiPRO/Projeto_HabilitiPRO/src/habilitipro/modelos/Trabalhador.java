@@ -125,10 +125,21 @@ public class Trabalhador {
     public void setAnotacoes() {
         this.getEmpresa().getTrilhas().forEach(t-> {
             t.getModulos().forEach(m -> {
-                if (m.getStatus().equals("")) {
+                if (m.getStatus().equals("Em fase de avaliação")) {
+                    String anotacao = validaString("Anotação para o módulo "+m.getNome()+":");
+                    anotacoes.put(m,anotacao);
+                }
+            });
+        });
+    }
 
-                } else if (m.getStatus().equals("")) {
-
+    public void setNotas() {
+        this.getEmpresa().getTrilhas().forEach(t-> {
+            t.getModulos().forEach(m -> {
+                if (m.getStatus().equals("Em fase de avaliação")) {
+                    final String  NOTA_TEMPLATE = "^[1-5]";
+                    int nota = Integer.parseInt(validaString("nota para o módulo "+m.getNome(),NOTA_TEMPLATE,
+                            "A nota deve ser um número inteiro positivo entre 1 e 5"));
                 }
             });
         });
