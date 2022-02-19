@@ -98,8 +98,8 @@ public class Modulo {
         Hashtable<Boolean, String> listaStatus = new Hashtable<>();
         listaStatus.put(LocalDate.now().compareTo(this.dataInicio)<=0,
                 "Curso não iniciado");
-        listaStatus.put(LocalDate.now().compareTo(this.dataFim)<=0&&
-                LocalDate.now().compareTo(this.prazoLimite)<0,"Curso em andamento");
+        listaStatus.put(LocalDate.now().compareTo(this.dataInicio)>=0&&
+                LocalDate.now().compareTo(this.dataFim)<0,"Curso em andamento");
         listaStatus.put(LocalDate.now().compareTo(this.dataFim)>0&&
                 LocalDate.now().compareTo(this.prazoLimite)<=0,"Em fase de avaliação");
         listaStatus.put(LocalDate.now().compareTo(this.prazoLimite)>0,"Fase de avaliação finalizada");
