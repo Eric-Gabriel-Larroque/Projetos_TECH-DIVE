@@ -4,11 +4,13 @@ import habilitipro.misc.CPF;
 
 import javax.swing.*;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-
+import static habilitipro.util.DataHandler.*;
 import static habilitipro.util.Validacao.*;
 import static habilitipro.modelos.Empresa.getListaEmpresa;
 import static habilitipro.modelos.Modulo.getListaModulo;
@@ -22,8 +24,9 @@ public class Trabalhador {
     private String setorArea;
     private String funcao;
     private LocalDate dataAdmissao;
+    private LinkedHashMap<Modulo,String> anotacoes = new LinkedHashMap<>();
+    private LinkedHashMap<Modulo,Integer> notas = new LinkedHashMap<>();
     private LinkedHashSet<Trilha> trilhasEscolhidas = new LinkedHashSet<>();
-
 
 
     public Trabalhador() {
@@ -35,36 +38,41 @@ public class Trabalhador {
         setSetorArea();
         setFuncao();
         setRegistro();
+        registraModulo();
     }
 
     private void setNome() {
         this.nome = validaString("Insira o nome do trabalhador");
     }
 
-
-    private void setEmpresa() {
-        if(verificaListaVazia(getListaModulo(),"Não pode ser cadastrado um trabalhador sem ser vinculado" +
+    public void setEmpresa() {
+        boolean repetir = true;
+        int empresaEscolhida = 0;
+        if(verificaListaVazia(getListaModulo(),
+                "Não pode ser cadastrado um trabalhador sem ser vinculado" +
                 " a pelo menos 1 Módulo")){
             new Modulo();
         }
-        List<String> listaNomeEmpresas = new ArrayList<>();
-        getListaEmpresa().forEach(e->listaNomeEmpresas.add(e.getNome()));
-        while(this.empresa==null||this.empresa.getTrilhas().size()==0){
-            int empresaEscolhida = 0;
+
+        while(repetir){
+            List<String> listaNomeEmpresas = new ArrayList<>();
+            getListaEmpresa().forEach(e->listaNomeEmpresas.add(e.getNome()));
            if(this.empresa==null) {
                empresaEscolhida = escolherOpcoes("Qual empresa será vinculada ao trabalhador?",
                        listaNomeEmpresas.toArray());
            }else {
-               empresaEscolhida = escolherOpcoes("Para qual empresaa o trabaalhador irá ser transferido?",
+               empresaEscolhida = escolherOpcoes("Para qual empresa o trabalhador irá ser transferido?",
                        listaNomeEmpresas.toArray());
                String registro = "Trabalhador "+this.nome+" mudou para a Empresa "+this.getEmpresa().getNome()+".";
                escreverNoArquivo(nomeArquivo,registro);
            }
+            repetir = false;
             this.empresa = getListaEmpresa().get(empresaEscolhida);
             if(this.empresa.getTrilhas().size()==-0){
                 JOptionPane.showMessageDialog(null,
                         "Essa Empresa não possui Trilhas cadastradas.",
                         "Empresa sem Trilhas",JOptionPane.INFORMATION_MESSAGE);
+                repetir = true;
             }
         }
         this.dataAdmissao = LocalDate.now();
@@ -115,11 +123,35 @@ public class Trabalhador {
     }
 
     public void setAnotacoes() {
+        this.getEmpresa().getTrilhas().forEach(t-> {
+            t.getModulos().forEach(m -> {
+                if (m.getStatus().equals("")) {
+
+                } else if (m.getStatus().equals("")) {
+
+                }
+            });
+        });
+    }
+    private void setRegistro() {
+        String registro = "Trabalhador "+this.nome+" possui "+this.trilhasEscolhidas.size()+" Trilha(s) "+
+                "executada(s) e vinculada(s)\nà Área/Setor "+this.setorArea+" ou Função "+this.funcao+"\n";
+        escreverNoArquivo(nomeArquivo,registro);
     }
 
-    public void setRegistro() {
-        String registro = "Trabalhador"+this.nome+" possui "+this.trilhasEscolhidas.size()+" Trilha(s)"+
-                "executada(s) e vinculada(s) à Área/Setor "+this.setorArea+" ou Função "+this.funcao;
-        escreverNoArquivo(nomeArquivo,registro);
+    public void registraModulo() {
+        this.trilhasEscolhidas.forEach(trilha->{
+            trilha.getModulos().forEach(m->{
+                if(m.getStatus().equals("Curso em andamento")){
+                    escreverNoArquivo(nomeArquivo,
+                            "Módulo "+m.getNome()+" inciado por "+this.nome+
+                            "às "+formatar(OffsetDateTime.now())+"\n");
+                }else if(m.getStatus().equals("Em fase de avaliação")){
+                    escreverNoArquivo(nomeArquivo,
+                            "Módulo"+this.nome+" inciado por "+this.nome+
+                                    "às"+formatar(OffsetDateTime.now())+"\n");
+                }
+            });
+        });
     }
 }
