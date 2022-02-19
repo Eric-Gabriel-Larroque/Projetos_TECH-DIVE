@@ -7,7 +7,9 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff
-../out
+../out/
+out/
+/out/
 ./out/
 ../out/*
 .idea/**/workspace.xml
