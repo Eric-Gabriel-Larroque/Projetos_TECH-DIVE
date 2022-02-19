@@ -8,7 +8,7 @@
 
 # User-specific stuff
 ../out
-./out
+./out/
 ../out/*
 .idea/**/workspace.xml
 .idea/**/tasks.xml
