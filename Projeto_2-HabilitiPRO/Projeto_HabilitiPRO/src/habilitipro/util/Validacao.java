@@ -63,7 +63,7 @@ public class Validacao {
     }
 
     public static int validaNumero(String mensagem) {
-        final String NUMERO_TEMPLATE = "^[1-9][0-9]*$";
+        final String NUMERO_TEMPLATE = "[1-9]+[0-9]*";
         String entrada;
         do{
             entrada = validaString(mensagem);
